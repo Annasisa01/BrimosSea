@@ -18,6 +18,8 @@ public class LevelManager {
     ArrayList<Rect> currentButtons;
     Bitmap[] bitmapsArray;
 
+    int changeBackground = 0;
+
     public LevelManager(Context context,
                         int pixelsPerMetre, int screenWidth,
                         InputController ic,
@@ -87,13 +89,20 @@ public class LevelManager {
                         case 's':
                             //Add a shark enemy to the gameObjects
                             gameObjects.add(new Shark(j, i, c));
+                            break;
+                        case 'o':
+                            gameObjects.add(new Ocean(j, i, c,0));
+                            break;
+
+                        case 'a':
+                            gameObjects.add(new Ocean(j, i, c,1));
+                            break;
                     }
                     // If the bitmap isn't prepared yet
                     if (bitmapsArray[getBitmapIndex(c)] == null) {
                         // Prepare it now and put it in the bitmapsArrayList
-                        bitmapsArray[getBitmapIndex(c)] =
-                                gameObjects.get(currentIndex).
-                                        prepareBitmap(context,
+                        bitmapsArray[getBitmapIndex(c)] = gameObjects.get(currentIndex).
+                                prepareBitmap(context,
                                                 gameObjects.get(currentIndex).
                                                         getBitmapName(),
                                                 pixelsPerMetre);
@@ -126,6 +135,12 @@ public class LevelManager {
             case 's':
                 index = 5;
                 break;
+            case 'o':
+                index = 6;
+                break;
+            case 'a':
+                index = 7;
+                break;
             default:
                 index = 0;
                 break;
@@ -156,6 +171,12 @@ public class LevelManager {
                 break;
             case 's':
                 index = 5;
+                break;
+            case 'o':
+                index = 6;
+                break;
+            case 'a':
+                index = 7;
                 break;
             default:
                 index = 0;

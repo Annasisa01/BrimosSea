@@ -21,11 +21,6 @@ public class Player extends GameObject{
     private int maxY;
     private int minY;
 
-    private boolean boosting;
-    private Bitmap bitmap;
-    private int x, y;
-    private int speed = 0;
-
     private int shieldStrength;
 
     public Player(Context context, float worldStartX, float worldStartY, int pixelsPerMetre){
@@ -64,7 +59,7 @@ public class Player extends GameObject{
     }
 
     @Override
-    public void update(long fps, float gravity) {
+    public void update(long fps, float gravity, Viewport vp) {
         if (isPressingRight) {
             this.setxVelocity(MAX_X_VELOCITY);
         } else if (isPressingLeft) {
@@ -78,17 +73,7 @@ public class Player extends GameObject{
             this.setyVelocity(0);
         }
 
-
-        //which way is player facing?
-        if (this.getxVelocity() > 0) {
-            //facing right
-            setFacing(RIGHT);
-        } else if (this.getxVelocity() < 0) {
-            //facing left
-            setFacing(LEFT);
-        }//if 0 then unchanged
-        // Let's go!
-        this.move(fps);
+        this.move(fps, vp);
 
         // Update all the hitboxes to the new location
         // Get the current world location of the player
@@ -174,15 +159,6 @@ public class Player extends GameObject{
             }
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-
 
     public int getShieldStrength() {
         return shieldStrength;
@@ -192,16 +168,18 @@ public class Player extends GameObject{
         shieldStrength --;
     }
 
-    public void checkBoundaries(Viewport vp){
-        if (this.getWorldLocation().y < -2 ){
-            this.setWorldLocationY(-2);
-        }else if (this.getWorldLocation().y > 12){
-            this.setWorldLocationY(12);
+    public void move(long fps, Viewport vp){
+        if (this.getWorldLocation().y < vp.getCurrentViewportWorldCentre().y - vp.getMetresToShowY()/2 + getHeight()/2){
+            this.setWorldLocationY(vp.getCurrentViewportWorldCentre().y - vp.getMetresToShowY()/2 + getHeight()/2);
+        }else if (this.getWorldLocation().y + getHeight() > vp.getMetresToShowY()-2){
+            this.setWorldLocationY(vp.getMetresToShowY()-4);
+        }
+        else if(getxVelocity() != 0) {
+            this.setWorldLocationX(this.getWorldLocation().x + getxVelocity() / fps);
         }
 
-        if (this.getWorldLocation().x < vp.getCurrentViewportWorldCentre().x){
-            this.setWorldLocationX(vp.getCurrentViewportWorldCentre().x);
+        if(getyVelocity() != 0) {
+            this.setWorldLocationY(this.getWorldLocation().y + getyVelocity() / fps);
         }
     }
-
-}
+    }

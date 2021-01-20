@@ -19,7 +19,7 @@ public class Worm extends GameObject{
     }
 
     @Override
-    public void update(long fps, float gravity) {
+    public void update(long fps, float gravity,Viewport vp) {
 
     }
 }

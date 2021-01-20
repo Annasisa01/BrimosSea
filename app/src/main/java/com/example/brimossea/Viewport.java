@@ -112,8 +112,4 @@ public class Viewport {
     public void updateViewport() {
         this.currentViewportWorldCentre.x += 0.0175;
     }
-
-    //    public void update(){
-//        currentViewportWorldCentre.x += 2/fps;
-//    }
 }

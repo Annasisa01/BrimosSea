@@ -26,9 +26,9 @@ public abstract class GameObject {
     private int facing;
     private boolean moves = false;
 
-    public abstract void update(long fps, float gravity);
+    public abstract void update(long fps, float gravity, Viewport vp);
 
-    void move(long fps){
+    void move(long fps, Viewport vp){
         if(xVelocity != 0) {
             this.worldLocation.x += xVelocity / fps;
         }

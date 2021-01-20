@@ -75,10 +75,9 @@ public class BSView extends SurfaceView implements Runnable {
 
         // Set the players location as the world centre
         vp.setWorldCentre(lm.gameObjects.get(lm.playerIndex)
-                        .getWorldLocation().x+17-lm.gameObjects.get(lm.playerIndex)
-                        .getWidth(),
-                lm.gameObjects.get(lm.playerIndex)
-                        .getWorldLocation().y);
+                        .getWorldLocation().x+vp.getMetresToShowX()/2-lm.gameObjects.get(lm.playerIndex)
+                        .getWidth()/2,
+                vp.getMetresToShowY()/2 - lm.player.getHeight()/2);
     }
 
     @Override
@@ -128,6 +127,12 @@ public class BSView extends SurfaceView implements Runnable {
                                         go.getWidth(),
                                         go.getHeight()));
                         // Draw the appropriate bitmap
+                        if (ps.hasShield && go instanceof Shield){
+                            paint.setAlpha(100);
+                        }
+                        else {
+                            paint.setAlpha(255);
+                        }
                         canvas.drawBitmap(
                                 lm.bitmapsArray
                                         [lm.getBitmapIndex(go.getType())],
@@ -137,32 +142,32 @@ public class BSView extends SurfaceView implements Runnable {
                 }
             }
             // Text for debugging
-            if (debugging) {
-                paint.setTextSize(32);
-                paint.setTextAlign(Paint.Align.LEFT);
-                paint.setColor(Color.argb(255, 255, 255, 255));
-                canvas.drawText("fps:" + fps, 10, 60, paint);
-                canvas.drawText("num objects:" +
-                        lm.gameObjects.size(), 10, 80, paint);
-                canvas.drawText("num clipped:" +
-                        vp.getNumClipped(), 10, 100, paint);
-                canvas.drawText("playerX:" +
-                                lm.gameObjects.get(lm.playerIndex).
-                                        getWorldLocation().x,
-                        10, 120, paint);
-                canvas.drawText("playerY:" +
-                        lm.gameObjects.get(lm.playerIndex).
-                                getWorldLocation().y,
-                        10, 140, paint);
-                canvas.drawText("X velocity:" +
-                                lm.gameObjects.get(lm.playerIndex).getxVelocity(),
-                        10, 180, paint);
-                canvas.drawText("Y velocity:" +
-                                lm.gameObjects.get(lm.playerIndex).getyVelocity(),
-                        10, 200, paint);
-                //for reset the number of clipped objects each frame
-                vp.resetNumClipped();
-            }// End if(debugging)
+//            if (debugging) {
+//                paint.setTextSize(32);
+//                paint.setTextAlign(Paint.Align.LEFT);
+//                paint.setColor(Color.argb(255, 255, 255, 255));
+//                canvas.drawText("fps:" + fps, 10, 60, paint);
+//                canvas.drawText("num objects:" +
+//                        lm.gameObjects.size(), 10, 80, paint);
+//                canvas.drawText("num clipped:" +
+//                        vp.getNumClipped(), 10, 100, paint);
+//                canvas.drawText("playerX:" +
+//                                lm.gameObjects.get(lm.playerIndex).
+//                                        getWorldLocation().x,
+//                        10, 120, paint);
+//                canvas.drawText("playerY:" +
+//                        lm.gameObjects.get(lm.playerIndex).
+//                                getWorldLocation().y,
+//                        10, 140, paint);
+//                canvas.drawText("X velocity:" +
+//                                lm.gameObjects.get(lm.playerIndex).getxVelocity(),
+//                        10, 180, paint);
+//                canvas.drawText("Y velocity:" +
+//                                lm.gameObjects.get(lm.playerIndex).getyVelocity(),
+//                        10, 200, paint);
+//                //for reset the number of clipped objects each frame
+//                vp.resetNumClipped();
+//            }// End if(debugging)
 
             //draw buttons
             paint.setColor(Color.argb(80, 255, 255, 255));
@@ -204,11 +209,6 @@ public class BSView extends SurfaceView implements Runnable {
                                 go.setActive(false);
                                 go.setVisible(false);
                                 ps.gotCredit();
-                                // Now restore state that was
-                                // removed by collision detection
-//                                if (hit != 2) {// Any hit except feet
-//                                    lm.player.restorePreviousVelocity();
-//                                }
                                 break;
                             case 'e':
                                 //extralife
@@ -216,16 +216,12 @@ public class BSView extends SurfaceView implements Runnable {
                                 go.setVisible(false);
                                 sm.playSound("life");
                                 ps.addLife();
-//                                if (hit != 2) {
-//                                    lm.player.restorePreviousVelocity();
-//                                }
                                 break;
                             case 'b':
                                 //shield
                                 if (!ps.hasShield){
                                     ps.activateShield();
                                 }
-                                go.setWorldLocation(lm.player.getWorldLocation().x,lm.player.getWorldLocation().y,0);
                                 break;
                             case 's':
                                 //shark
@@ -235,9 +231,15 @@ public class BSView extends SurfaceView implements Runnable {
                                 break;
                         }
                     }
+
+                    if (go instanceof Shield && ps.hasShield){
+                        float newX = (go.getWidth() - lm.player.getWidth()) / 2;
+                        float newY = (go.getHeight() - lm.player.getHeight()) / 2;
+                        go.setWorldLocation(lm.player.getWorldLocation().x - newX, lm.player.getWorldLocation().y - newY,0);
+                    }
                     if (lm.isPlaying()) {
                         // Run any un-clipped updates
-                        go.update(fps, lm.gravity);
+                        go.update(fps, lm.gravity,vp);
                     }
                 } else {
                     // Set visible flag to false
@@ -263,6 +265,7 @@ public class BSView extends SurfaceView implements Runnable {
         playing = false;
         try {
             gameThread.join();
+            sm.stopSound("background");
         }catch (InterruptedException e){
             Log.e("error", "failed to pause thread");
         }

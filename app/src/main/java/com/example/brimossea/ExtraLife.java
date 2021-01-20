@@ -15,7 +15,7 @@ public class ExtraLife extends GameObject{
         setRectHitbox();
     }
     @Override
-    public void update(long fps, float gravity) {
+    public void update(long fps, float gravity, Viewport vp) {
 
     }
 }
