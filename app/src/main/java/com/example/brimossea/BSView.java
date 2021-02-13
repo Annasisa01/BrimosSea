@@ -141,20 +141,41 @@ public class BSView extends SurfaceView implements Runnable {
                     }
                 }
             }
+
+            int topSpace = vp.getPixelsPerMetreY() / 4;
+            int iconSize = vp.getPixelsPerMetreX();
+            int padding = vp.getPixelsPerMetreX() / 2;
+//            int centring = vp.getPixelsPerMetreY() / 12;
+            paint.setTextSize(vp.getPixelsPerMetreY());
+            paint.setTextAlign(Paint.Align.CENTER);
+            paint.setColor(Color.argb(100, 0, 0, 0));
+            canvas.drawRect(0,0,iconSize * 7.0f, topSpace*2 + iconSize,paint);
+            paint.setColor(Color.argb(255, 255, 255, 0));
+            canvas.drawBitmap(lm.getBitmap('e'), 0, topSpace, paint);
+            canvas.drawText("" + ps.getLives(), (iconSize * 1) + padding,
+                    (iconSize) , paint);
+            canvas.drawBitmap(lm.getBitmap('1'), (iconSize * 1.5f) + padding,
+                    topSpace, paint);
+            canvas.drawText("" + ps.getCredits(), (iconSize * 3.5f) + padding
+                    * 2, (iconSize) , paint);
+//            canvas.drawBitmap(lm.getBitmap('b'), (iconSize * 5.0f) + padding,
+//                    topSpace, paint);
+//            canvas.drawText("" + ps.getFireRate(), (iconSize * 6.0f) + padding
+//                    * 2, (iconSize) - centring, paint);
             // Text for debugging
 //            if (debugging) {
-//                paint.setTextSize(32);
-//                paint.setTextAlign(Paint.Align.LEFT);
-//                paint.setColor(Color.argb(255, 255, 255, 255));
+                paint.setTextSize(32);
+                paint.setTextAlign(Paint.Align.RIGHT);
+                paint.setColor(Color.argb(255, 255, 255, 255));
 //                canvas.drawText("fps:" + fps, 10, 60, paint);
 //                canvas.drawText("num objects:" +
 //                        lm.gameObjects.size(), 10, 80, paint);
 //                canvas.drawText("num clipped:" +
 //                        vp.getNumClipped(), 10, 100, paint);
-//                canvas.drawText("playerX:" +
-//                                lm.gameObjects.get(lm.playerIndex).
-//                                        getWorldLocation().x,
-//                        10, 120, paint);
+                canvas.drawText("playerX:" +
+                                lm.gameObjects.get(lm.playerIndex).
+                                        getWorldLocation().x,
+                        300, 120, paint);
 //                canvas.drawText("playerY:" +
 //                        lm.gameObjects.get(lm.playerIndex).
 //                                getWorldLocation().y,

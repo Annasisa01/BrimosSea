@@ -110,6 +110,10 @@ public class Viewport {
     }
 
     public void updateViewport() {
-        this.currentViewportWorldCentre.x += 0.0175;
+        this.currentViewportWorldCentre.x += 0.0525;
+    }
+
+    public int getPixelsPerMetreY() {
+        return pixelsPerMetreY;
     }
 }

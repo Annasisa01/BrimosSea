@@ -5,14 +5,12 @@ import android.graphics.PointF;
 public class PlayerState {
     public boolean hasShield;
     private int numCredits;
-    private int mgFireRate;
     private int lives;
     private float restartX;
     private float restartY;
     PlayerState() {
         hasShield = false;
         lives = 3;
-        mgFireRate = 1;
         numCredits = 0;
     }
 
@@ -32,7 +30,7 @@ public class PlayerState {
     }
 
     public void gotCredit(){
-        numCredits ++;
+        numCredits += 5;
     }
     public int getCredits(){
         return numCredits;

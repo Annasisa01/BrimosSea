@@ -2,8 +2,8 @@ package com.example.brimossea;
 
 public class ExtraLife extends GameObject{
     ExtraLife(float worldStartX, float worldStartY, char type) {
-        final float HEIGHT = .8f;
-        final float WIDTH = .65f;
+        final float HEIGHT = 1;
+        final float WIDTH = 1f;
         setHeight(HEIGHT);
         setWidth(WIDTH);
         setType(type);

@@ -17,9 +17,6 @@ public class Player extends GameObject{
     RectHitbox rectHitboxTop;
     RectHitbox rectHitboxLeft;
     RectHitbox rectHitboxRight;
-    // Stop fish leaving the screen
-    private int maxY;
-    private int minY;
 
     private int shieldStrength;
 
@@ -69,7 +66,7 @@ public class Player extends GameObject{
         } else if (isPressingDown){
             this.setyVelocity(MAX_Y_VELOCITY);
         } else {
-            this.setxVelocity(1);
+            this.setxVelocity(3);
             this.setyVelocity(0);
         }
 
