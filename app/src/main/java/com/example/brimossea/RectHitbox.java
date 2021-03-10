@@ -1,11 +1,11 @@
 package com.example.brimossea;
 
 public class RectHitbox {
-    float top;
-    float left;
-    float bottom;
-    float right;
-    float height;
+    private float top;
+    private float left;
+    private float bottom;
+    private float right;
+
     boolean intersects(RectHitbox rectHitbox){
         boolean hit = false;
         if(this.right > rectHitbox.left
@@ -22,25 +22,31 @@ public class RectHitbox {
     public void setTop(float top) {
         this.top = top;
     }
-    public float getLeft() {
-        return left;
-    }
     public void setLeft(float left) {
         this.left = left;
     }
     public void setBottom(float bottom) {
         this.bottom = bottom;
     }
-    public float getRight() {
-        return right;
-    }
     public void setRight(float right) {
         this.right = right;
     }
-    public float getHeight() {
-        return height;
+
+    public float getTop() {
+        return top;
     }
-    public void setHeight(float height) {
-        this.height = height;
+
+    public float getLeft() {
+        return left;
     }
+
+    public float getBottom() {
+        return bottom;
+    }
+
+    public float getRight() {
+        return right;
+    }
+
+
 }

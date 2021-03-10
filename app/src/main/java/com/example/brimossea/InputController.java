@@ -132,7 +132,8 @@ public class InputController {
                         }
                         break;
                 }// End if(l.playing)
-            }else {// Not playing
+            }else {
+                // Not playing
                 //Move the viewport around to explore the map
                 switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_DOWN:

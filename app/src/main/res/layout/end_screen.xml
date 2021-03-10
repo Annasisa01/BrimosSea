@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background">
+
+    <TextView
+        android:id="@+id/current_score"
+        android:layout_width="133dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/bangers"
+        android:padding="10dp"
+        android:textColor="#232A50"
+        android:textSize="30sp"
+        app:layout_constraintStart_toEndOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/high_score" />
+
+    <TextView
+        android:id="@+id/highScoreText"
+        android:layout_width="169dp"
+        android:layout_height="69dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/bangers"
+        android:text="@string/high_score"
+        android:textColor="#232A50"
+        android:textSize="40sp"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="238dp"
+        android:layout_height="112dp"
+        android:fontFamily="@font/bangers"
+        android:text="@string/game_over"
+        android:textColor="#232A50"
+        android:textSize="60sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <Button
+        android:id="@+id/restart_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/restartbutton"
+        android:padding="20dp"
+        android:text="@string/restart"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:backgroundTint="@color/teal_200"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.451"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/current_score" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="218dp"
+        android:layout_height="72dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/bangers"
+        android:text="@string/current_score"
+        android:textColor="#232A50"
+        android:textSize="40sp"
+        app:layout_constraintStart_toStartOf="@+id/highScoreText"
+        app:layout_constraintTop_toBottomOf="@+id/high_score" />
+
+    <TextView
+        android:id="@+id/high_score"
+        android:layout_width="146dp"
+        android:layout_height="72dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/bangers"
+        android:padding="10dp"
+        android:textColor="#232A50"
+        android:textSize="30sp"
+        app:layout_constraintStart_toEndOf="@+id/highScoreText"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <Button
+        android:id="@+id/nextLevel_button"
+        android:layout_width="176dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/restartbutton"
+        android:text="@string/nextLevel_button"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:backgroundTint="@color/teal_200"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.186"
+        app:layout_constraintStart_toEndOf="@+id/restart_button"
+        app:layout_constraintTop_toBottomOf="@+id/current_score"
+        app:layout_constraintVertical_bias="0.0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

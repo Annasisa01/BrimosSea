@@ -78,57 +78,21 @@ public class Player extends GameObject{
         Vector2Point5D location = getWorldLocation();
         float lx = location.x;
         float ly = location.y;
-        //update the player feet hitbox
-        rectHitboxBottom.top = ly + getHeight() * .95f;
-        rectHitboxBottom.left = lx + getWidth() * .2f;
-        rectHitboxBottom.bottom = ly + getHeight() * .98f;
-        rectHitboxBottom.right = lx + getWidth() * .8f;
-        // Update player head hitbox
-        rectHitboxTop.top = ly;
-        rectHitboxTop.left = lx + getWidth() * .4f;
-        rectHitboxTop.bottom = ly + getHeight() * .2f;
-        rectHitboxTop.right = lx + getWidth() * .6f;
-        // Update player left hitbox
-        rectHitboxLeft.top = ly + getHeight() * .2f;
-        rectHitboxLeft.left = lx + getWidth() * .2f;
-        rectHitboxLeft.bottom = ly + getHeight() * .8f;
-        rectHitboxLeft.right = lx + getWidth() * .3f;
         // Update player right hitbox
-        rectHitboxRight.top = ly + getHeight() * .2f;
-        rectHitboxRight.left = lx + getWidth() * .8f;
-        rectHitboxRight.bottom = ly + getHeight() * .8f;
-        rectHitboxRight.right = lx + getWidth() * .7f;
+        rectHitboxRight.setTop(ly + getHeight() * .2f);
+        rectHitboxRight.setLeft(lx + getWidth() * .8f);
+        rectHitboxRight.setBottom(ly + getHeight() * .8f);
+        rectHitboxRight.setRight(lx + getWidth() * .7f);
     }
 
     public int checkCollisions(RectHitbox rectHitbox) {
         int collided = 0;// No collision
-        // The left
-        if (this.rectHitboxLeft.intersects(rectHitbox)) {
-            // Left has collided
-            // Move player just to right of current hitbox
-//            this.setWorldLocationX(rectHitbox.right - getWidth() * .2f);
-            collided = 1;
-        }
         // The right
         if (this.rectHitboxRight.intersects(rectHitbox)) {
             // Right has collided
             // Move player just to left of current hitbox
 //            this.setWorldLocationX(rectHitbox.left - getWidth() * .8f);
             collided = 1;
-        }
-        // The feet
-        if (this.rectHitboxBottom.intersects(rectHitbox)) {
-            // Feet have collided
-            // Move feet to just above current hitbox
-//            this.setWorldLocationY(rectHitbox.top - getHeight());
-            collided = 2;
-        }
-        // Now the head
-        if (this.rectHitboxTop.intersects(rectHitbox)) {
-            // Head has collided. Ouch!
-            // Move head to just below current hitbox bottom
-//            this.setWorldLocationY(rectHitbox.bottom);
-            collided = 3;
         }
         return collided;
     }
@@ -146,32 +110,18 @@ public class Player extends GameObject{
         this.isPressingDown = isPressingDown;
     }
 
-    public void restorePreviousVelocity() {
-            if (getFacing() == LEFT) {
-//                isPressingLeft = true;
-                setxVelocity(MAX_X_VELOCITY);
-            } else {
-//                isPressingRight = true;
-                setxVelocity(-MAX_X_VELOCITY);
-            }
-    }
-
-
-    public int getShieldStrength() {
-        return shieldStrength;
-    }
-
-    public void reduceShieldStrength(){
-        shieldStrength --;
-    }
-
     public void move(long fps, Viewport vp){
         if (this.getWorldLocation().y < vp.getCurrentViewportWorldCentre().y - vp.getMetresToShowY()/2 + getHeight()/2){
             this.setWorldLocationY(vp.getCurrentViewportWorldCentre().y - vp.getMetresToShowY()/2 + getHeight()/2);
         }else if (this.getWorldLocation().y + getHeight() > vp.getMetresToShowY()-2){
             this.setWorldLocationY(vp.getMetresToShowY()-4);
         }
-        else if(getxVelocity() != 0) {
+        if (this.getWorldLocation().x < vp.getCurrentViewportWorldCentre().x - vp.getMetresToShowX()/2 + getWidth()/2){
+            this.setWorldLocationX(vp.getCurrentViewportWorldCentre().x - vp.getMetresToShowX()/2 + getWidth()/2);
+        }else if (this.getWorldLocation().x + getWidth() > vp.getCurrentViewportWorldCentre().x + vp.getMetresToShowX()/2){
+            this.setWorldLocationX(vp.getCurrentViewportWorldCentre().x + vp.getMetresToShowX()/2);
+        }
+        if(getxVelocity() != 0) {
             this.setWorldLocationX(this.getWorldLocation().x + getxVelocity() / fps);
         }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class LevelManager {
     private String level;
@@ -18,8 +19,6 @@ public class LevelManager {
     ArrayList<Rect> currentButtons;
     Bitmap[] bitmapsArray;
 
-    int changeBackground = 0;
-
     public LevelManager(Context context,
                         int pixelsPerMetre, int screenWidth,
                         InputController ic,
@@ -30,8 +29,12 @@ public class LevelManager {
             case "LevelCave":
                 levelData = new LevelCave();
                 break;
-            // We can add extra levels here
-
+            case "LevelTwo":
+                levelData = new LevelTwo();
+                break;
+            case "LevelThree":
+                levelData = new LevelThree();
+                break;
         }
 
         // To hold all our GameObjects
@@ -87,8 +90,24 @@ public class LevelManager {
                             gameObjects.add(new Shield(j, i, c));
                             break;
                         case 's':
+                            Shark shark = new Shark(j, i, c);
+                            switch (level) {
+                                case "LevelTwo":
+                                    shark.setxVelocity(-2);
+                                    break;
+                                case "LevelThree":
+                                    Random rand = new Random();
+                                    int ranInt = rand.nextInt(3)-3;
+                                    System.out.println("Randint is "+ ranInt);
+                                    shark.setxVelocity(ranInt);
+                                    shark.setyVelocity(rand.nextInt(4) - 2);
+                                    break;
+                                default:
+                                    shark.setxVelocity(0);
+                                    break;
+                            }
                             //Add a shark enemy to the gameObjects
-                            gameObjects.add(new Shark(j, i, c));
+                            gameObjects.add(shark);
                             break;
                         case 'o':
                             gameObjects.add(new Ocean(j, i, c,0));
@@ -187,5 +206,9 @@ public class LevelManager {
 
     public void switchPlayingStatus() {
         playing = !playing;
+    }
+
+    public String getLevel() {
+        return level;
     }
 }

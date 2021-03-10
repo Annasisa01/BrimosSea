@@ -1,6 +1,7 @@
 package com.example.brimossea;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -14,6 +15,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -24,7 +26,7 @@ import java.util.ArrayList;
 
 public class BSView extends SurfaceView implements Runnable {
     private boolean debugging = true;
-    volatile boolean playing;
+    volatile boolean playing = true;
     Thread gameThread = null;
     private Paint paint;
     private Canvas canvas;
@@ -44,9 +46,10 @@ public class BSView extends SurfaceView implements Runnable {
 
 
 
-    public BSView(Context context, int screenWidth, int screenHeight) {
+    public BSView(Context context, int screenWidth, int screenHeight,String level) {
         super(context);
         this.context = context;
+        // Initialize our drawing objects
         ourHolder = getHolder();
         paint = new Paint();
         // Initialize the viewport
@@ -55,7 +58,7 @@ public class BSView extends SurfaceView implements Runnable {
         ps = new PlayerState();
 
         // Load the first level
-        loadLevel("LevelCave", 0, 6);
+        loadLevel(level, 0, 6);
     }
 
     public void loadLevel(String level, float px, float py) {
@@ -69,9 +72,6 @@ public class BSView extends SurfaceView implements Runnable {
                 ic, level, px, py);
         ic = new InputController(vp.getScreenWidth(),
                 vp.getScreenHeight());
-
-        PointF location = new PointF(px, py);
-        ps.saveLocation(location);
 
         // Set the players location as the world centre
         vp.setWorldCentre(lm.gameObjects.get(lm.playerIndex)
@@ -102,17 +102,17 @@ public class BSView extends SurfaceView implements Runnable {
         if (lm != null) {
             ic.handleInput(motionEvent, lm, sm, vp);
         }
-        //invalidate();
         return true;
     }
 
     private void draw(){
         if (ourHolder.getSurface().isValid()){
+            //First we lock the area of memory we will be drawing to
             canvas = ourHolder.lockCanvas();
 
             // Rub out the last frame with arbitrary color
-            paint.setColor(Color.argb(255, 0, 0, 255));
-            canvas.drawColor(Color.argb(255, 0, 0, 255));
+            paint.setColor(Color.argb(255, 255, 0, 255));
+            canvas.drawColor(Color.argb(255, 255, 0, 255));
 
             // Draw all the GameObjects
             Rect toScreen2d = new Rect();
@@ -126,8 +126,9 @@ public class BSView extends SurfaceView implements Runnable {
                                         go.getWorldLocation().y,
                                         go.getWidth(),
                                         go.getHeight()));
+                        paint.setColor(Color.argb(255, 255, 0, 255));
                         // Draw the appropriate bitmap
-                        if (ps.hasShield && go instanceof Shield){
+                        if (ps.shield == go){
                             paint.setAlpha(100);
                         }
                         else {
@@ -158,36 +159,17 @@ public class BSView extends SurfaceView implements Runnable {
                     topSpace, paint);
             canvas.drawText("" + ps.getCredits(), (iconSize * 3.5f) + padding
                     * 2, (iconSize) , paint);
-//            canvas.drawBitmap(lm.getBitmap('b'), (iconSize * 5.0f) + padding,
-//                    topSpace, paint);
-//            canvas.drawText("" + ps.getFireRate(), (iconSize * 6.0f) + padding
-//                    * 2, (iconSize) - centring, paint);
+
+
             // Text for debugging
 //            if (debugging) {
                 paint.setTextSize(32);
                 paint.setTextAlign(Paint.Align.RIGHT);
                 paint.setColor(Color.argb(255, 255, 255, 255));
-//                canvas.drawText("fps:" + fps, 10, 60, paint);
-//                canvas.drawText("num objects:" +
-//                        lm.gameObjects.size(), 10, 80, paint);
-//                canvas.drawText("num clipped:" +
-//                        vp.getNumClipped(), 10, 100, paint);
                 canvas.drawText("playerX:" +
                                 lm.gameObjects.get(lm.playerIndex).
                                         getWorldLocation().x,
                         300, 120, paint);
-//                canvas.drawText("playerY:" +
-//                        lm.gameObjects.get(lm.playerIndex).
-//                                getWorldLocation().y,
-//                        10, 140, paint);
-//                canvas.drawText("X velocity:" +
-//                                lm.gameObjects.get(lm.playerIndex).getxVelocity(),
-//                        10, 180, paint);
-//                canvas.drawText("Y velocity:" +
-//                                lm.gameObjects.get(lm.playerIndex).getyVelocity(),
-//                        10, 200, paint);
-//                //for reset the number of clipped objects each frame
-//                vp.resetNumClipped();
 //            }// End if(debugging)
 
             //draw buttons
@@ -212,6 +194,9 @@ public class BSView extends SurfaceView implements Runnable {
 
     private void update() {
         for (GameObject go : lm.gameObjects) {
+            if (go instanceof Player && go.getWorldLocation().x + go.getWidth() >= lm.mapWidth ){
+                endGame(ps.getCredits());
+            }
             if (go.isActive()) {
                 // Clip anything off-screen
                 if (!vp.clipObjects(go.getWorldLocation().x,
@@ -242,46 +227,52 @@ public class BSView extends SurfaceView implements Runnable {
                                 //shield
                                 if (!ps.hasShield){
                                     ps.activateShield();
+                                    ps.setShield(go);
                                 }
                                 break;
                             case 's':
                                 //shark
                                 go.setActive(false);
-                                sm.playSound("shark");
-                                ps.loseLife();
+//                                sm.playSound("shark");
+                                if (!ps.hasShield){
+                                    ps.loseLife();
+                                }
+                                if(ps.getLives() <= 0) {
+                                    endGame(ps.getCredits());
+                                    break;
+                                }
                                 break;
                         }
                     }
 
-                    if (go instanceof Shield && ps.hasShield){
+                    if (go == ps.shield){
                         float newX = (go.getWidth() - lm.player.getWidth()) / 2;
                         float newY = (go.getHeight() - lm.player.getHeight()) / 2;
                         go.setWorldLocation(lm.player.getWorldLocation().x - newX, lm.player.getWorldLocation().y - newY,0);
+                        if (System.currentTimeMillis()-ps.getShieldStartTime() >= ps.SHIELD_TIMEOUT){
+                            ps.deactivateShield();
+                        }
                     }
+
                     if (lm.isPlaying()) {
                         // Run any un-clipped updates
                         go.update(fps, lm.gravity,vp);
                     }
-                } else {
+                    } else {
                     // Set visible flag to false
                     go.setVisible(false);
                     // Now draw() can ignore them
-                }
+                    }
             }
         }
 
-        if (lm.isPlaying()) {
+        if (lm.isPlaying() && vp.getCurrentViewportWorldCentre().x + vp.getMetresToShowX()/2 + lm.player.getWidth()/2 <= lm.mapWidth) {
             vp.updateViewport();
         }
     }
 
-    private void control() {
-        try {
-            gameThread.sleep(17);
-        } catch (InterruptedException e) {
-        }
-    }
 
+    //Clean up our thread if the game is interrupted
     public void pause() {
         playing = false;
         try {
@@ -292,9 +283,32 @@ public class BSView extends SurfaceView implements Runnable {
         }
     }
 
+
+    // Make a new thread and start it
+    // Execution moves to our run method
     public void resume() {
         playing = true;
         gameThread = new Thread(this);
         gameThread.start();
+    }
+
+
+    //This method starts the endActivity and passes the score information to the next activity
+    public void endGame(int current) {
+        //Check if the previous score was greater than the current score
+        if(current > Records.currentHighScore) {
+            Records.currentHighScore = current;
+        }
+        Records.currentScore = current;
+        playing = false;
+        Intent intent = new Intent(getContext(), EndActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra("highScore", Records.currentHighScore);
+        intent.putExtra("currentScore", Records.currentScore);
+        intent.putExtra("currentLevel", lm.getLevel());
+        intent.putExtra("lives", ps.getLives());
+        getContext().startActivity(intent);
+
+
     }
 }

@@ -3,6 +3,7 @@ package com.example.brimossea;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 
 
 public abstract class GameObject {
@@ -21,7 +22,6 @@ public abstract class GameObject {
 
     private float xVelocity;
     private float yVelocity;
-    final int LEFT = -1;
     final int RIGHT = 1;
     private int facing;
     private boolean moves = false;
@@ -108,9 +108,6 @@ public abstract class GameObject {
         this.type = type;
     }
 
-    public int getFacing() {
-        return facing;
-    }
     public void setFacing(int facing) {
         this.facing = facing;
     }
@@ -132,9 +129,6 @@ public abstract class GameObject {
             this.yVelocity = yVelocity;
         }
     }
-    public boolean isMoves() {
-        return moves;
-    }
     public void setMoves(boolean moves) {
         this.moves = moves;
     }
@@ -143,12 +137,12 @@ public abstract class GameObject {
     }
 
     public void setRectHitbox() {
-        rectHitbox.setTop(worldLocation.y);
-        rectHitbox.setLeft(worldLocation.x);
-        rectHitbox.setBottom(worldLocation.y + height);
-        rectHitbox.setRight(worldLocation.x + width);
+            rectHitbox.setTop(worldLocation.y );
+            rectHitbox.setLeft(worldLocation.x);
+            rectHitbox.setBottom(worldLocation.y + height );
+            rectHitbox.setRight(worldLocation.x + width);
     }
-    RectHitbox getHitbox(){
+    public RectHitbox getHitbox(){
         return rectHitbox;
     }
 

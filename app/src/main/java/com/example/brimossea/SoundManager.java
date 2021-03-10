@@ -50,7 +50,14 @@ public class SoundManager {
     public void stopSound(String sound){
         switch (sound){
             case "background":
-                backgorund.pause();
+                if(backgorund!=null){
+
+                if(backgorund.isPlaying()){
+                    backgorund.stop();
+                }
+                    backgorund.release();
+
+                }
                 break;
             case "wavy":
                 feeding.pause();

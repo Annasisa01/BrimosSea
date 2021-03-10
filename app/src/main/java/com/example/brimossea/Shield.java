@@ -18,4 +18,8 @@ public class Shield extends GameObject{
     public void update(long fps, float gravity, Viewport vp) {
 
     }
+
+    public String toString() {
+        return "isActive: "+isActive() +", isVisible: "+ isVisible();
+    }
 }

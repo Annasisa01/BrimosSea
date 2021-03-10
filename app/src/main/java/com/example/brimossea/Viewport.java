@@ -4,6 +4,7 @@ import android.graphics.Rect;
 
 public class Viewport {
     private Vector2Point5D currentViewportWorldCentre;
+
     private Rect convertedRect;
     private int pixelsPerMetreX;
     private int pixelsPerMetreY;
@@ -13,7 +14,6 @@ public class Viewport {
     private int screenCentreY;
     private int metresToShowX;
     private int metresToShowY;
-    private int numClipped;
 
     Viewport(int x, int y) {
         screenXResolution = x;
@@ -70,13 +70,9 @@ public class Viewport {
                                float objectWidth,
                                float objectHeight) {
         boolean clipped = true;
-        if (objectX - objectWidth <
-                currentViewportWorldCentre.x + (metresToShowX / 2)) {
-            if (objectX + objectWidth >
-                    currentViewportWorldCentre.x - (metresToShowX / 2)) {
-                if (objectY - objectHeight <
-                        currentViewportWorldCentre.y +
-                                (metresToShowY / 2)) {
+        if (objectX - objectWidth < currentViewportWorldCentre.x + (metresToShowX / 2)) {
+            if (objectX + objectWidth > currentViewportWorldCentre.x - (metresToShowX / 2)) {
+                if (objectY - objectHeight < currentViewportWorldCentre.y + (metresToShowY / 2)) {
                     if (objectY + objectHeight > currentViewportWorldCentre.y - (metresToShowY / 2)){
                         clipped = false;
                     }
@@ -84,17 +80,7 @@ public class Viewport {
             }
         }
         // For debugging
-        if(clipped){
-            numClipped++;
-        }
         return clipped;
-    }
-
-    public int getNumClipped(){
-        return numClipped;
-    }
-    public void resetNumClipped(){
-        numClipped = 0;
     }
 
     public int getMetresToShowX() {
@@ -115,5 +101,9 @@ public class Viewport {
 
     public int getPixelsPerMetreY() {
         return pixelsPerMetreY;
+    }
+
+    public Rect getConvertedRect() {
+        return convertedRect;
     }
 }

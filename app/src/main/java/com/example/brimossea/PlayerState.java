@@ -1,28 +1,26 @@
 package com.example.brimossea;
 
 import android.graphics.PointF;
+import android.os.Handler;
+import android.util.Log;
+import android.widget.Toast;
 
 public class PlayerState {
     public boolean hasShield;
     private int numCredits;
     private int lives;
-    private float restartX;
-    private float restartY;
+    private boolean reachedEnd;
+    Shield shield;
+
+
+
+    private long shieldStartTime;
+    public final long SHIELD_TIMEOUT = 10000;
     PlayerState() {
+        reachedEnd = false;
         hasShield = false;
         lives = 3;
         numCredits = 0;
-    }
-
-
-    public void saveLocation(PointF location) {
-        // The location saves each time the player uses a teleport
-        restartX = location.x;
-        restartY = location.y;
-    }
-    public PointF loadLocation() {
-        // Used every time the player loses a life
-        return new PointF(restartX, restartY);
     }
 
     public int getLives(){
@@ -41,17 +39,29 @@ public class PlayerState {
     public void addLife(){
         lives++;
     }
-    public void resetLives(){
-        lives = 3;
-    }
-    public void resetCredits(){
-        lives = 0; }
 
     public void activateShield() {
         hasShield = true;
+        shieldStartTime = System.currentTimeMillis();
     }
 
     public void deactivateShield(){
         hasShield = false;
+        shield.setActive(false);
+        shield.setVisible(false);
+        System.out.println("deactivated shield " + shield);
     }
+
+    public long getShieldStartTime() {
+        return shieldStartTime;
+    }
+
+    public void setShield(GameObject go) {
+        System.out.println("Just seet shield to " + (Shield) go);
+        shield = (Shield) go;
+    }
+
+//    public long getSHIELD_TIMEOUT() {
+//        return SHIELD_TIMEOUT;
+//    }
 }

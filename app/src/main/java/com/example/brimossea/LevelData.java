@@ -7,5 +7,11 @@ public class LevelData {
     // This class will evolve along with the project
     // Tile types
     // . = no tile
-    // 1 = Grass
+    // 1 = Worm
+    // p = player
+    // e = extra life
+    // b = shield
+    // s = shark
+    // o = ocean_right
+    // a = ocean_left
 }
