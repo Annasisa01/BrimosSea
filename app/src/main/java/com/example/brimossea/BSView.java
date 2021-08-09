@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class BSView extends SurfaceView implements Runnable {
-    private boolean debugging = true;
+    private boolean debugging = false;
     volatile boolean playing = true;
     Thread gameThread = null;
     private Paint paint;
@@ -162,7 +162,7 @@ public class BSView extends SurfaceView implements Runnable {
 
 
             // Text for debugging
-//            if (debugging) {
+            if (debugging) {
                 paint.setTextSize(32);
                 paint.setTextAlign(Paint.Align.RIGHT);
                 paint.setColor(Color.argb(255, 255, 255, 255));
@@ -170,7 +170,7 @@ public class BSView extends SurfaceView implements Runnable {
                                 lm.gameObjects.get(lm.playerIndex).
                                         getWorldLocation().x,
                         300, 120, paint);
-//            }// End if(debugging)
+            }// End if(debugging)
 
             //draw buttons
             paint.setColor(Color.argb(80, 255, 255, 255));
